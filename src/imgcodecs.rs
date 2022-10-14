@@ -1,20 +1,11 @@
-use crate::ffi::{cv, manual};
-use autocxx::c_int;
-use cxx::{let_cxx_string, UniquePtr};
+use cxx::let_cxx_string;
+use super::ffi;
 
-type Mat = UniquePtr<cv::Mat>;
-
-pub fn imread(filename: &'static str, flags: i32) -> Mat {
+pub fn imread(filename: &'static str, flags: i32) -> cxx::UniquePtr<ffi::Mat> {
     let_cxx_string!(filename = filename);
+    let mat;
 
-    manual::imread(filename, c_int(flags))
-}
+    mat = ffi::imread(&filename, flags);
 
-pub fn imreadmulti(filename:&'static str, mats: std::pin::Pin<&mut cxx::CxxVector<cv::Mat>>,flags: i32) -> bool {
-    let_cxx_string!(filename = filename);
-    cv::imreadmulti(&filename, mats, c_int(flags))
-}
-
-pub fn imwrite() {
-    
+    mat
 }

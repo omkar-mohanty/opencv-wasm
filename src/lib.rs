@@ -1,10 +1,12 @@
 pub mod imgcodecs;
-use autocxx::prelude::*;
+#[cxx::bridge(namespace = "manual")]
+mod ffi {
 
-include_cpp! {
-    #include "manual.hpp"
-    safety!(unsafe)
-    generate!("manual::imread")
-    generate!("cv::imreadmulti")
-    generate!("cv::imwrite")
+    unsafe extern "C++" {
+        include!("opencv-wasm/include/manual.hpp");
+
+        type Mat;
+
+        fn imread(filename: &CxxString, flags: i32) -> UniquePtr<Mat>;
+    }
 }

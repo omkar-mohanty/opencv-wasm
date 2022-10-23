@@ -11,4 +11,4 @@ cxx-build = "1.0"
 pkg-config = "0.3.25"
 
 [build]
-rustflags = ["-C", "link-args=-L ~/Source/lfx/opencv-wasm/lib"]
+rustflags = ["-C", "target-feature=-crt-static"]

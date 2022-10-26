@@ -1,4 +1,4 @@
-//use opencv_wasm::imgcodecs::imread;
+use opencv_wasm::imgcodecs::imread;
 fn main() {
-    //imread("./", 1);
+    imread("./", 1);
 }

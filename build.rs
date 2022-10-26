@@ -1,6 +1,4 @@
-//use std::path::Path;
 extern crate pkg_config;
-
 const _LIBS: [&str; 16] = [
     "libopencv_photo.a",
     "libopencv_objdetect.a",

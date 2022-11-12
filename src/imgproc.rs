@@ -24,3 +24,15 @@ pub fn blur(
 ) {
     ffi::blur(src, dst, ksize, anchor, border_type);
 }
+
+pub fn box_filter(
+    src: UniquePtr<InputArray>,
+    dst: UniquePtr<OutputArray>,
+    ddepth: i32,
+    ksize: UniquePtr<Size>,
+    anchor: UniquePtr<Point>,
+    normalize: bool,
+    border_type: i32,
+) {
+    ffi::boxFilter(src, dst, ddepth, ksize, anchor, normalize, border_type);
+}

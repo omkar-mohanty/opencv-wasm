@@ -1,5 +1,26 @@
 pub mod imgcodecs;
 pub mod imgproc;
+use std::{error::Error, fmt::Display};
+
+#[derive(Debug)]
+struct CvError<'a> {
+    msg: &'a str,
+}
+
+impl<'a> CvError<'a> {
+    pub fn new(msg: &'a str) -> Self {
+        CvError { msg }
+    }
+}
+
+impl<'a> Display for CvError<'a> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.msg)
+    }
+}
+
+impl<'a> Error for CvError<'a> {}
+
 #[cxx::bridge(namespace = "manual")]
 mod ffi {
     unsafe extern "C++" {
@@ -32,6 +53,16 @@ mod ffi {
             dst: UniquePtr<OutputArray>,
             ksize: UniquePtr<Size>,
             anchor: UniquePtr<Point>,
+            borderType: i32,
+        );
+
+        fn boxFilter(
+            src: UniquePtr<InputArray>,
+            dst: UniquePtr<OutputArray>,
+            ddepth: i32,
+            ksize: UniquePtr<Size>,
+            anchor: UniquePtr<Point>,
+            normalize: bool,
             borderType: i32,
         );
     }

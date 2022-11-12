@@ -1,26 +1,38 @@
-extern crate pkg_config;
-const _LIBS: [&str; 16] = [
-    "libopencv_photo.a",
-    "libopencv_objdetect.a",
-    "libopencv_highgui.a",
-    "libopencv_imgproc.a",
-    "libopencv_imgcodecs.a",
-    "libopencv_flann.a",
-    "libopencv_videoio.a",
-    "libopencv_video.a",
-    "libopencv_ts.a",
-    "libopencv_dnn.a",
-    "libopencv_gapi.a",
-    "libopencv_features2d.a",
-    "libopencv_stitching.a",
-    "libopencv_ml.a",
-    "libopencv_core.a",
-    "libopencv_calib3d.a",
-];
+use std::env::set_var; 
+
+const WASI_SDK_PATH:&str = "/opt/wasi-sdk";
+const WASI_SYSROOT:&str = "/opt/wasi-sdk/share/wasi-sysroot";
+
+fn prepeare_env() {
+    let cc = format!("{}/bin/clang --sysroot={}",WASI_SDK_PATH,WASI_SYSROOT);
+    let cxx = format!("{}/bin/clang++ --sysroot={}", WASI_SDK_PATH,WASI_SYSROOT );
+    let ar = format!("{}/bin/llvm-ar",WASI_SDK_PATH);
+    let cxx_wasm32_wasi = cxx.clone();
+    let cc_wasm32_wasi = cc.clone();
+    let cargo_target_wasm32_wasi_linker = format!("{}/bin/wasm-ld", WASI_SDK_PATH);
+
+    set_var("WASI_SDK_PATH", WASI_SDK_PATH);
+    set_var("WASI_SYSROOT", WASI_SYSROOT);
+    set_var("CC", cc);
+    set_var("CXX", cxx);
+    set_var("AR", ar);
+    set_var("CXX_wasm32_wasi", cxx_wasm32_wasi);
+    set_var("CC_wasm32_wasi", cc_wasm32_wasi);
+    set_var("CARGO_TARGET_WASM32_WASI_LINKER", cargo_target_wasm32_wasi_linker);
+}
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    println!("cargo:rustc-link-search=/opt/wasi-sdk/share/sysroot/lib/wasm32-wasi");
-    println!("cargo:rustc-link-search=/usr/local/lib");
+    prepeare_env();
+    let libs:Vec<&str> = vec![
+        //"opencv_highgui",
+        "opencv_imgproc",
+        "opencv_imgcodecs",
+        "opencv_core",
+        "c++",
+        "c++abi"
+    ];
+
+    println!("cargo:rustc-link-search=lib");
     //let lib = pkg_config::Config::new().probe("opencv4").unwrap();
 
     let source_files = vec!["src/lib.rs"];
@@ -30,14 +42,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             .for_each(|link| println!("cargo-rustc-link-lib={}", link))
     });*/
 
-    /*for lib in LIBS {
-        println!("cargo-rustc-link-lib={}", lib);
-    }*/
+    for lib in libs {
+       println!("cargo:rustc-link-lib=static={}", lib);
+    }
+
+    let sysroot = format!("--sysroot={}",WASI_SYSROOT);
 
     bridge
-        .archiver("llvm-ar")
-        .cpp_link_stdlib(None)
-        .cpp(true)
+        .flag(&sysroot)    
         .include("/usr/local/include")
         .include("/usr/local/include/opencv4")
         .compile("ocvrs-wasm");

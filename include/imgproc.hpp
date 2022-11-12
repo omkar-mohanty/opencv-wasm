@@ -19,5 +19,11 @@ namespace manual {
 	void blur(std::unique_ptr<InputArray> src,  std::unique_ptr<OutputArray> dst, std::unique_ptr<Size> ksize, std::unique_ptr<Point> anchor, int32_t borderType) {
 		cv::blur( *src.get(), *dst.get(), *ksize.get(),*anchor.get(),borderType);
 	}
+
+	void boxFilter(std::unique_ptr<InputArray> src,  std::unique_ptr<OutputArray> dst, int32_t ddepth, std::unique_ptr<Size> ksize, std::unique_ptr<Point> anchor, bool normalize, int32_t borderType) {
+	cv::boxFilter(*src.get(),*dst.get(),  ddepth, *ksize.get(),*anchor.get(),normalize,borderType);	
+	}
+
+	
 }
 

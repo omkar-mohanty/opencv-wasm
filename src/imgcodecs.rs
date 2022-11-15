@@ -1,11 +1,8 @@
-use super::{ffi, CvError};
-use cxx::{let_cxx_string, CxxVector, UniquePtr};
+use super::{ffi, CvError, Mat};
+use cxx::let_cxx_string;
 use std::error::Error;
 
-pub fn imread(
-    filename: String,
-    flags: i32,
-) -> Result<cxx::UniquePtr<ffi::Mat>, Box<dyn Error>> {
+pub fn imread(filename: String, flags: i32) -> Result<Mat, Box<dyn Error>> {
     let filename = filename.as_str();
 
     if !std::path::Path::new(filename).exists() {
@@ -14,14 +11,12 @@ pub fn imread(
 
     let_cxx_string!(filename = filename);
 
-    let mat;
+    let mat = ffi::imread(&filename, flags);
 
-    mat = ffi::imread(&filename, flags);
-
-    Ok(mat)
+    Ok(Mat { mat })
 }
 
-pub fn imwrite(filename: &'static str, img: UniquePtr<ffi::InputArray>, params: &CxxVector<i32>) {
+pub fn imwrite(filename: &'static str, img: Mat) {
     let_cxx_string!(filename = filename);
-    ffi::imwrite(&filename, img, params);
+    ffi::imwrite(&filename, img.mat);
 }

@@ -2,11 +2,8 @@
 name = "opencv-wasm"
 version = "0.1.0"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
 cxx = "1.0.78"
 [build-dependencies]
 cxx-build = "1.0"
-[build]
-target = "wasm32-wasi"
+

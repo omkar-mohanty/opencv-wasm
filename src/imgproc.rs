@@ -1,38 +1,36 @@
-use super::{
-    ffi,
-    ffi::{InputArray, OutputArray, Point, Size},
-};
-use cxx::UniquePtr;
+use super::{ffi, Mat, Point, Size};
 
 pub fn bilateral_filter(
-    src: UniquePtr<InputArray>,
-    dst: UniquePtr<OutputArray>,
+    src: Mat,
+    dst: Mat,
     d: i32,
     sigma_color: f64,
     sigma_space: f64,
     border_type: i32,
 ) {
-    ffi::bilateralFilter(src, dst, d, sigma_color, sigma_space, border_type);
+    ffi::bilateralFilter(src.mat, dst.mat, d, sigma_color, sigma_space, border_type);
 }
 
-pub fn blur(
-    src: UniquePtr<InputArray>,
-    dst: UniquePtr<OutputArray>,
-    ksize: UniquePtr<Size>,
-    anchor: UniquePtr<Point>,
-    border_type: i32,
-) {
-    ffi::blur(src, dst, ksize, anchor, border_type);
+pub fn blur(src: Mat, dst: Mat, ksize: Size, anchor: Point, border_type: i32) {
+    ffi::blur(src.mat, dst.mat, ksize.size, anchor.point, border_type);
 }
 
 pub fn box_filter(
-    src: UniquePtr<InputArray>,
-    dst: UniquePtr<OutputArray>,
+    src: Mat,
+    dst: Mat,
     ddepth: i32,
-    ksize: UniquePtr<Size>,
-    anchor: UniquePtr<Point>,
+    ksize: Size,
+    anchor: Point,
     normalize: bool,
     border_type: i32,
 ) {
-    ffi::boxFilter(src, dst, ddepth, ksize, anchor, normalize, border_type);
+    ffi::boxFilter(
+        src.mat,
+        dst.mat,
+        ddepth,
+        ksize.size,
+        anchor.point,
+        normalize,
+        border_type,
+    );
 }

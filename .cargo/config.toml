@@ -1,0 +1,10 @@
+[env]
+WASI_SDK_PATH = "/opt/wasi-sdk"
+WASI_SYSROOT="/opt/wasi-sdk/share/wasi-sysroot"
+CC={ value = "/opt/wasi-sdk/bin/clang --sysroot=/opt/wasi-sdk/share/wasi-sysroot" , force = true}
+CXX={ value = "/opt/wasi-sdk/bin/clang++ --sysroot=/opt/wasi-sdk/share/wasi-sysroot --target=wasm32-wasi" , force= true}
+AR="/opt/wasi-sdk/bin/llvm-ar"
+CXX_wasm32_wasi={ value = "/opt/wasi-sdk/bin/clang++ --sysroot=/opt/wasi-sdk/share/wasi-sysroot --target=wasm32-wasi" , force= true}
+CC_wasm32_wasi={ value = "/opt/wasi-sdk/bin/clang --sysroot=/opt/wasi-sdk/share/wasi-sysroot" , force = true}
+[build]
+target = "wasm32-wasi"
